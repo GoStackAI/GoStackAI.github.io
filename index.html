@@ -227,31 +227,29 @@
         /* ==========================================
            BACKEND INFRASTRUCTURE CONFIGURATION (SUPABASE)
            ========================================== */
-        const SUPABASE_URL = "https://fjawzbenaqzdrfigyamy.supabase.co/rest/v1/"; 
+/* ==========================================
+           BACKEND INFRASTRUCTURE CONFIGURATION (SUPABASE)
+           ========================================== */
+        // REMOVED /rest/v1/ from the end of the URL string
+        const SUPABASE_URL = "https://fjawzbenaqzdrfigyamy.supabase.co"; 
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqYXd6YmVuYXF6ZHJmaWd5YW15Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2Mzc2MDEsImV4cCI6MjA5NTIxMzYwMX0.2Hg2gRgOG2Ip6dmlcKyjzPC4upT4Nvs_HpkLrNxX2Fg";
         
         let supabase = null;
-        if (typeof supabasev2 !== 'undefined') {
-            // Check if user updated placeholders before running architecture clients
-            if (SUPABASE_URL && !SUPABASE_URL.includes("YOUR_PROJECT_ID")) {
-                try {
-                    supabase = supabasev2.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                } catch(e) {
-                    console.error("Supabase link bypassed.", e);
-                }
-            }
-        } else if (typeof window.supabase !== 'undefined') {
-            if (SUPABASE_URL && !SUPABASE_URL.includes("YOUR_PROJECT_ID")) {
-                try {
-                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                } catch(e) {
-                    console.error("Supabase initialization bypassed.", e);
-                }
-            }
-        }
 
+        // Correctly target the global 'supabase' library object loaded from the CDN
+        if (typeof window.supabase !== 'undefined') {
+            try {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log("Supabase successfully initialized.");
+            } catch(e) {
+                console.error("Supabase client connection failed:", e);
+            }
+        } else {
+            console.error("Supabase script tag failed to load from CDN.");
+        }
         // Baseline registry mock layers
         const baseTools = [
+            
             {
                 id: 1,
                 name: "Neural Pipeline V4",
