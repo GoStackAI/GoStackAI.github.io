@@ -3,348 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoStackAI</title>
+    <title>GoStackAI | Registry</title>
     <style>
         :root {
             --bg: #000000;
             --surface: #0d0d0d;
+            --surface-card: #0a0a0a;
             --border: #1f1f1f;
-            --border-focus: #444444;
-            --text: #999999;
+            --border-focus: #3a3a3a;
+            --text: #888888;
             --text-bright: #ffffff;
             --accent: #ffffff;
+            --google-red: #ea4335;
+            --github-gray: #24292e;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            overflow-x: hidden;
-        }
+        /* --- OLLAMA SPLASH --- */
+        #splash { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--bg); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; font-family: monospace; }
+        .terminal-box { width: 300px; text-align: left; }
+        .line { overflow: hidden; white-space: nowrap; border-right: 2px solid var(--accent); width: 0; color: var(--text-bright); margin-bottom: 5px; }
+        .line1 { animation: type 0.6s steps(20) forwards; }
+        .line2 { animation: type 0.6s steps(25) steps(20) 0.6s forwards; border-right: none; }
+        @keyframes type { from { width: 0 } to { width: 100% } }
+        @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
 
-        /* --- OLLAMA STYLE SPLASH ANIMATION --- */
-        #splash {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: var(--bg);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-family: monospace;
-        }
-        .terminal-box {
-            width: 300px;
-            text-align: left;
-        }
-        .line {
-            overflow: hidden;
-            white-space: nowrap;
-            border-right: 2px solid var(--accent);
-            width: 0;
-            color: var(--text-bright);
-            margin-bottom: 5px;
-        }
-        .line1 { animation: type 0.8s steps(20) forwards; }
-        .line2 { animation: type 0.8s steps(25) delay 0.8s forwards; border-right: none; }
-        @keyframes type {
-            from { width: 0 }
-            to { width: 100% }
-        }
-        @keyframes fadeOut {
-            to { opacity: 0; visibility: hidden; }
-        }
-
-        /* --- MAIN NAVIGATION --- */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid var(--border);
-            background-color: var(--bg);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .logo {
-            font-weight: 700;
-            color: var(--text-bright);
-            font-size: 1.25rem;
-            text-decoration: none;
-            letter-spacing: -0.5px;
-        }
+        /* --- NAVIGATION --- */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); background-color: var(--bg); position: sticky; top: 0; z-index: 500; }
+        .logo { font-weight: 700; color: var(--text-bright); font-size: 1.3rem; text-decoration: none; letter-spacing: -0.5px; }
         .logo span { font-weight: 300; color: var(--text); }
         .nav-right { display: flex; gap: 1rem; align-items: center; }
-        .nav-btn {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text-bright);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
+        .nav-btn { background: transparent; border: 1px solid var(--border); color: var(--text-bright); padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; font-weight: 500; }
         .nav-btn:hover { border-color: var(--border-focus); background-color: var(--surface); }
-        .user-profile-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #222;
-            border: 1px solid var(--border-focus);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-bright);
-            font-weight: bold;
-            font-size: 0.85rem;
-        }
+        .nav-btn.primary { background-color: var(--accent); color: var(--bg); border: 1px solid var(--accent); }
+        .nav-btn.primary:hover { background-color: #e0e0e0; }
+        
+        .user-profile-icon { width: 34px; height: 34px; border-radius: 50%; background: #1a1a1a; border: 1px solid var(--border-focus); display: flex; align-items: center; justify-content: center; color: var(--text-bright); font-weight: bold; font-size: 0.9rem; text-transform: uppercase; }
 
-        /* --- HERO & SEARCH (OLLAMA CLEAN) --- */
-        .hero {
-            max-width: 800px;
-            margin: 6rem auto 4rem auto;
-            text-align: center;
-            padding: 0 1rem;
-        }
-        .hero h2 {
-            font-size: 3rem;
-            color: var(--text-bright);
-            font-weight: 700;
-            letter-spacing: -1px;
-            margin-bottom: 1.5rem;
-        }
-        .search-container {
-            position: relative;
-            max-width: 600px;
-            margin: 2rem auto 0 auto;
-        }
-        .search-input {
-            width: 100%;
-            padding: 1rem 1.5rem;
-            background-color: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-bright);
-            font-size: 1.1rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
+        /* --- HOME VIEW --- */
+        #homeView { max-width: 1100px; margin: 0 auto; padding: 4rem 2rem; }
+        .hero { text-align: center; max-width: 700px; margin: 2rem auto 5rem auto; }
+        .hero h2 { font-size: 3.5rem; color: var(--text-bright); font-weight: 700; letter-spacing: -1.5px; margin-bottom: 1rem; }
+        .hero p { font-size: 1.15rem; color: var(--text); margin-bottom: 2.5rem; }
+        .search-input { width: 100%; max-width: 550px; padding: 1.1rem 1.5rem; background-color: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text-bright); font-size: 1.05rem; outline: none; transition: border-color 0.2s; text-align: center; }
         .search-input:focus { border-color: var(--border-focus); }
 
-        /* --- CONTENT SECTION --- */
-        .main-content {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 2rem 6rem 2rem;
-        }
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-        .section-header h3 { color: var(--text-bright); font-size: 1.2rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+        .card { background-color: var(--surface-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.75rem; cursor: pointer; transition: all 0.2s; }
+        .card:hover { border-color: var(--border-focus); transform: translateY(-2px); }
+        .card-author { font-size: 0.8rem; color: var(--text); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; font-weight: 500; }
+        .card h4 { color: var(--text-bright); font-size: 1.3rem; margin-bottom: 0.5rem; letter-spacing: -0.3px; }
+        .card p { font-size: 0.95rem; color: var(--text); line-height: 1.5; }
+
+        /* --- FULL SCREEN DETAIL VIEW --- */
+        #detailView { display: none; max-width: 1000px; margin: 0 auto; padding: 3rem 2rem 6rem 2rem; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--text); text-decoration: none; font-size: 0.95rem; margin-bottom: 2.5rem; cursor: pointer; }
+        .back-link:hover { color: var(--text-bright); }
         
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-        .card {
-            background-color: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.5rem;
-            cursor: pointer;
-            transition: border-color 0.2s;
-            position: relative;
-        }
-        .card:hover { border-color: var(--border-focus); }
-        .card-author {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text);
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .card-author span { color: #555; }
-        .card h4 { color: var(--text-bright); font-size: 1.2rem; margin-bottom: 0.5rem; }
-        .card p { font-size: 0.9rem; color: var(--text); line-height: 1.4; }
+        .detail-header { display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: start; margin-bottom: 2.5rem; }
+        .detail-header h1 { font-size: 3rem; color: var(--text-bright); letter-spacing: -1px; margin-bottom: 0.5rem; }
+        
+        /* IMAGE GALLERY PANELS */
+        .image-gallery { display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; margin-bottom: 3rem; }
+        .main-img-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; height: 380px; display: flex; align-items: center; justify-content: center; color: #444; font-size: 0.9rem; overflow: hidden; position: relative; }
+        .side-img-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; height: 185px; display: flex; align-items: center; justify-content: center; color: #444; font-size: 0.9rem; overflow: hidden; }
+        .side-images { display: flex; flex-direction: column; gap: 1rem; }
+        .gallery-img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* --- THE MODAL OVERLAYS (POPUPS) --- */
-        .modal {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: rgba(0,0,0,0.85);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 1000; opacity: 0; pointer-events: none;
-            transition: opacity 0.2s;
-        }
+        .detail-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 3.5rem; }
+        .doc-section h3 { color: var(--text-bright); font-size: 1.4rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+        .doc-section p { font-size: 1.05rem; line-height: 1.7; color: #b5b5b5; margin-bottom: 2rem; }
+
+        /* --- REALISTIC AUTH MODAL --- */
+        .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.9); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
         .modal.active { opacity: 1; pointer-events: auto; }
-        .modal-content {
-            background-color: var(--surface);
-            border: 1px solid var(--border);
-            width: 100%; max-width: 600px;
-            border-radius: 12px; padding: 2rem;
-            position: relative; max-height: 85vh; overflow-y: auto;
-        }
-        .close-btn {
-            position: absolute; top: 1.5rem; right: 1.5rem;
-            background: transparent; border: none; color: var(--text);
-            font-size: 1.5rem; cursor: pointer;
-        }
-        .close-btn:hover { color: var(--text-bright); }
+        .modal-content { background-color: var(--surface); border: 1px solid var(--border); width: 100%; max-width: 420px; border-radius: 12px; padding: 2.5rem; position: relative; text-align: center; }
+        .close-btn { position: absolute; top: 1.2rem; right: 1.2rem; background: transparent; border: none; color: var(--text); font-size: 1.4rem; cursor: pointer; }
+        
+        /* SOCIAL BUTTONS */
+        .social-auth-btn { width: 100%; padding: 0.8rem; border-radius: 6px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 500; font-size: 0.95rem; cursor: pointer; margin-bottom: 0.75rem; background: transparent; color: var(--text-bright); transition: background 0.2s; }
+        .social-auth-btn:hover { background: #111; border-color: var(--border-focus); }
+        .social-auth-btn.google img { width: 18px; }
+        .social-auth-btn.github { background-color: #111; }
 
-        /* --- AUTH FORMS & UPLOAD --- */
-        .form-group { margin-bottom: 1.2rem; }
-        .form-group label { display: block; font-size: 0.85rem; color: var(--text-bright); margin-bottom: 0.5rem; }
-        .form-control {
-            width: 100%; padding: 0.75rem; background-color: var(--bg);
-            border: 1px solid var(--border); border-radius: 6px;
-            color: var(--text-bright); outline: none;
-        }
+        .auth-divider { margin: 1.5rem 0; display: flex; align-items: center; text-align: center; font-size: 0.8rem; color: #444; }
+        .auth-divider::before, .auth-divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
+        .auth-divider:not(:empty)::before { margin-right: .5em; }
+        .auth-divider:not(:empty)::after { margin-left: .5em; }
+
+        .form-group { margin-bottom: 1.2rem; text-align: left; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--text-bright); margin-bottom: 0.4rem; }
+        .form-control { width: 100%; padding: 0.75rem; background-color: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text-bright); outline: none; font-size: 0.95rem; }
         .form-control:focus { border-color: var(--border-focus); }
-        .submit-btn {
-            width: 100%; padding: 0.75rem; background: var(--accent);
-            color: var(--bg); font-weight: 600; border: none;
-            border-radius: 6px; cursor: pointer; margin-top: 0.5rem;
-        }
+        .submit-btn { width: 100%; padding: 0.8rem; background: var(--accent); color: var(--bg); font-weight: 600; border: none; border-radius: 6px; cursor: pointer; margin-top: 0.5rem; font-size: 0.95rem; }
 
-        /* --- COMMENTS SECTIONS --- */
-        .comments-section { margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.5rem; }
-        .comments-title { font-size: 1rem; color: var(--text-bright); margin-bottom: 1rem; }
-        .comment-item {
-            display: flex; gap: 0.75rem; margin-bottom: 1rem;
-            background: var(--bg); padding: 0.75rem; border-radius: 6px;
-            border: 1px solid var(--border);
-        }
-        .comment-meta { font-size: 0.85rem; color: var(--text-bright); font-weight: 600; margin-bottom: 0.2rem; display: flex; align-items: center; gap: 6px;}
-        .comment-text { font-size: 0.9rem; color: var(--text); }
-        .comment-form { display: flex; gap: 0.5rem; margin-top: 1rem; }
+        /* --- SERIOUS COMMENTS SECTION --- */
+        .comment-box { margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem; }
+        .comment-input-area { display: flex; gap: 1rem; margin-bottom: 2.5rem; align-items: flex-start; }
+        .comment-thread { display: flex; flex-direction: column; gap: 1.5rem; }
+        .comment-node { display: flex; gap: 1rem; background: var(--surface-card); border: 1px solid var(--border); padding: 1.25rem; border-radius: 8px; }
+        .c-meta { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-bright); font-weight: 600; margin-bottom: 0.4rem; }
+        .c-meta span { color: var(--text); font-weight: 400; font-size: 0.8rem; }
+        .c-text { font-size: 0.95rem; color: #cccccc; line-height: 1.5; }
+
+        /* --- UPLOAD ARCHITECTURE MODAL --- */
+        #uploadModal .modal-content { max-width: 550px; text-align: left; }
     </style>
 </head>
 <body>
 
     <div id="splash">
         <div class="terminal-box">
-            <div class="line line1">> gostackai --init</div>
-            <div class="line line2">> fetching neural layers...</div>
+            <div class="line line1">> accessing gostackai telemetry...</div>
+            <div class="line line2">> matrix status: fully compiled.</div>
         </div>
     </div>
 
     <nav>
-        <a href="#" class="logo">GoStack<span>AI</span></a>
+        <a href="#" class="logo" onclick="showHome()">GoStack<span>AI</span></a>
         <div class="nav-right" id="navAuthArea">
             <button class="nav-btn" onclick="openModal('authModal')">Sign In</button>
         </div>
     </nav>
 
-    <header class="hero">
-        <h2>Open-source models, curated.</h2>
-        <div class="search-container">
-            <input type="text" class="search-input" id="searchInput" placeholder="Search models, tools, or stacks..." oninput="filterTools()">
-        </div>
-    </header>
+    <div id="homeView">
+        <header class="hero">
+            <h2>Run your ideas.</h2>
+            <p>A modern decentralized index for custom AI tools, system prompts, and configuration weights.</p>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search architecture registry..." oninput="filterTools()">
+        </header>
 
-    <main class="main-content">
-        <div class="section-header">
-            <h3>Library</h3>
-            <button class="nav-btn" id="uploadTriggerBtn" onclick="checkAuthAndOpenUpload()">+ Share Model</button>
+        <div class="section-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:1rem;">
+            <h3 style="color:var(--text-bright); font-size:1.1rem; font-weight:600;">Models Index</h3>
+            <button class="nav-btn primary" onclick="checkAuthAndOpenUpload()">+ Broadcast Model</button>
         </div>
-        <div class="grid" id="toolsGrid">
-            </div>
-    </main>
+
+        <div class="grid" id="toolsGrid"></div>
+    </div>
+
+    <div id="detailView">
+        </div>
 
     <div class="modal" id="authModal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('authModal')">&times;</button>
-            <h3 style="color: var(--text-bright); margin-bottom: 1.5rem;">Access Hub</h3>
+            <h3 style="color: var(--text-bright); margin-bottom: 0.5rem; font-size: 1.5rem; letter-spacing: -0.5px;">Welcome to GoStackAI</h3>
+            <p style="font-size:0.85rem; color:var(--text); margin-bottom:2rem;">Authenticate configuration layers to push deployments.</p>
+            
+            <button class="social-auth-btn google" onclick="simulateOAuth('Google')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
+                Continue with Google
+            </button>
+            <button class="social-auth-btn github" onclick="simulateOAuth('GitHub')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color: white;"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                Continue with GitHub
+            </button>
+
+            <div class="auth-divider">or use access tokens</div>
+
             <div class="form-group">
-                <label>Username</label>
-                <input type="text" id="authUsername" class="form-control" placeholder="e.g., alex_dev">
+                <label>Secure Identifier Name</label>
+                <input type="text" id="authUsername" class="form-control" placeholder="Enter username...">
             </div>
-            <button class="submit-btn" onclick="simulateLogin()">Initialize Profile</button>
+            <button class="submit-btn" onclick="simulateLogin()">Initialize Profile Matrix</button>
         </div>
     </div>
 
     <div class="modal" id="uploadModal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
-            <h3 style="color: var(--text-bright); margin-bottom: 1.5rem;">Publish Architecture</h3>
+            <h3 style="color: var(--text-bright); margin-bottom: 1.5rem; font-size:1.4rem;">Broadcast Component Model</h3>
             <div class="form-group">
-                <label>Tool/Model Name</label>
-                <input type="text" id="toolName" class="form-control" placeholder="e.g., Llama-3-Custom">
+                <label>System Model Title</label>
+                <input type="text" id="toolName" class="form-control" placeholder="e.g., GoStack-Vision-AI">
             </div>
             <div class="form-group">
-                <label>Short Pitch</label>
-                <input type="text" id="toolPitch" class="form-control" placeholder="Brief one-sentence utility description">
+                <label>Index Summary Line</label>
+                <input type="text" id="toolPitch" class="form-control" placeholder="One short clear feature line...">
             </div>
             <div class="form-group">
-                <label>Complete Specifications & Documentation</label>
-                <textarea id="toolDesc" class="form-control" rows="4" placeholder="Detailed analysis, instructions, and integration frameworks..."></textarea>
+                <label>Primary Image URL (Leave blank for default canvas)</label>
+                <input type="text" id="toolImgMain" class="form-control" placeholder="https://images.unsplash.com/your-image...">
             </div>
-            <button class="submit-btn" onclick="addNewTool()">Push to Registry</button>
+            <div class="form-group">
+                <label>Deep Specifications & Structural Matrix Docs</label>
+                <textarea id="toolDesc" class="form-control" rows="5" placeholder="Write comprehensive breakdown guides, specifications, and architecture layers..."></textarea>
+            </div>
+            <button class="submit-btn" onclick="addNewTool()">Deploy into Main Grid</button>
         </div>
     </div>
 
-    <div class="modal" id="detailModal">
-        <div class="modal-content" id="detailModalContent">
-            </div>
-    </div>
-
     <script>
-        // Default official items posted by you
+        // Baseline tools uploaded natively under your organization profile
         const baseTools = [
             {
                 id: 1,
-                name: "Advanced Generation Pipeline",
-                pitch: "State-of-the-art text execution model built for intricate multi-agent orchestration.",
-                desc: "This framework delivers highly cohesive multi-turn contextual tracking. Excellent for building deep semantic structures, processing data matrix patterns, or scaling context execution up to 128k parameters seamlessly.",
-                author: "GoStackAI"
+                name: "Neural Pipeline V4",
+                pitch: "State-of-the-art text execution model built for intricate multi-agent cluster orchestrations.",
+                desc: "An optimization system calibrated strictly to control contextual threads across distributed clusters. Delivers highly accurate prompt pipeline expansion, memory array formatting, and high-frequency code file analytics natively on consumer hardware profiles.\n\n### Core System Benchmarks\n- Context Parameter Target: 128k unified canvas arrays\n- Compute Vector Processing Density: 4.88 TFLOP tokens\n- Neural Mapping Logic Node Depth: 94 automated layers",
+                author: "GoStackAI",
+                mainImg: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop",
+                sideImg1: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=600&auto=format&fit=crop",
+                sideImg2: "https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=600&auto=format&fit=crop"
             },
             {
                 id: 2,
-                name: "Claude-3.5 Strategy Layer",
-                pitch: "Expert automation module calibrated specifically for software design architecture patterns.",
-                desc: "An optimization matrix built to map code structures, read repository dependencies, and generate high-fidelity technical diagrams. Designed explicitly to sit inline with continuous deployment environments.",
-                author: "GoStackAI"
-            },
-            {
-                id: 3,
-                name: "Perplexity Research Matrix",
-                pitch: "Real-time query agent that maps contextual graph nodes across current live infrastructure data.",
-                desc: "Bypasses standard algorithmic delays to cross-reference search intent across web clusters instantly, pulling verifiable source footnotes back to your core machine terminal interface safely.",
-                author: "GoStackAI"
+                name: "Claude-3.5 Strategy Module",
+                pitch: "Expert system automation pipeline mapped specifically to trace and design massive software architectures.",
+                desc: "Built to read continuous integration hooks across open standard staging servers. Scans active repositories, builds interactive code dependency files, updates component layers automatically, and surfaces deep architectural maps through a unified interface system layout structure.",
+                author: "GoStackAI",
+                mainImg: "https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=1000&auto=format&fit=crop",
+                sideImg1: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop",
+                sideImg2: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=600&auto=format&fit=crop"
             }
         ];
 
         let currentUsername = localStorage.getItem('hub_user') || null;
         let tools = JSON.parse(localStorage.getItem('hub_tools')) || baseTools;
-        let comments = JSON.parse(localStorage.getItem('hub_comments')) || {};
+        let comments = JSON.parse(localStorage.getItem('hub_comments')) || {
+            1: [
+                { user: "GoStackAI", msg: "Telemetry stable. Deployment layer integrated into local machine builds successfully." },
+                { user: "beta_tester", msg: "Vector density is tracking beautifully. Absolute magic response speeds on small setups." }
+            ]
+        };
 
-        // Fade splash animation screen out
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
-                const splash = document.getElementById('splash');
-                splash.style.animation = "fadeOut 0.4s forwards";
+                document.getElementById('splash').style.animation = "fadeOut 0.3s forwards";
                 renderTools();
                 updateAuthUI();
-            }, 1800);
+            }, 1200);
         });
 
         function openModal(id) { document.getElementById(id).classList.add('active'); }
@@ -354,18 +244,26 @@
             const container = document.getElementById('navAuthArea');
             if(currentUsername) {
                 container.innerHTML = `
-                    <div class="user-profile-icon">${currentUsername.substring(0,2).toUpperCase()}</div>
-                    <span style="font-size:0.9rem; color:var(--text-bright)">${currentUsername}</span>
-                    <button class="nav-btn" style="padding: 0.3rem 0.6rem; font-size:0.8rem;" onclick="logout()">Disconnect</button>
+                    <div class="user-profile-icon">${currentUsername.substring(0,2)}</div>
+                    <span style="font-size:0.9rem; color:var(--text-bright); font-weight:500;">${currentUsername}</span>
+                    <button class="nav-btn" style="padding:0.4rem 0.8rem; font-size:0.8rem; border-color:#333;" onclick="logout()">Disconnect</button>
                 `;
             } else {
                 container.innerHTML = `<button class="nav-btn" onclick="openModal('authModal')">Sign In</button>`;
             }
         }
 
+        function simulateOAuth(platform) {
+            let mockUser = platform === 'Google' ? 'googler_ai' : 'git_builder';
+            currentUsername = mockUser;
+            localStorage.setItem('hub_user', mockUser);
+            updateAuthUI();
+            closeModal('authModal');
+        }
+
         function simulateLogin() {
             const user = document.getElementById('authUsername').value.trim();
-            if(!user) return alert("Enter an identifier token.");
+            if(!user) return alert("Please establish a profile login matrix tag.");
             currentUsername = user;
             localStorage.setItem('hub_user', user);
             updateAuthUI();
@@ -383,10 +281,10 @@
             grid.innerHTML = '';
             tools.forEach(t => {
                 grid.innerHTML += `
-                    <div class="card" onclick="viewToolDetail(${t.id})">
+                    <div class="card" onclick="viewToolPage(${t.id})">
                         <div class="card-author">
-                            <div class="user-profile-icon" style="width:16px; height:16px; font-size:0.5rem;">${t.author.substring(0,2).toUpperCase()}</div>
-                            <span>Posted by</span> ${t.author}
+                            <div class="user-profile-icon" style="width:18px; height:18px; font-size:0.55rem;">${t.author.substring(0,2)}</div>
+                            <span>By ${t.author}</span>
                         </div>
                         <h4>${t.name}</h4>
                         <p>${t.pitch}</p>
@@ -399,14 +297,14 @@
             const query = document.getElementById('searchInput').value.toLowerCase();
             const cards = document.querySelectorAll('#toolsGrid .card');
             tools.forEach((t, i) => {
-                const match = t.name.toLowerCase().includes(query) || t.pitch.toLowerCase().includes(query) || t.desc.toLowerCase().includes(query);
+                const match = t.name.toLowerCase().includes(query) || t.pitch.toLowerCase().includes(query);
                 cards[i].style.display = match ? 'block' : 'none';
             });
         }
 
         function checkAuthAndOpenUpload() {
             if(!currentUsername) {
-                alert("Authentication required to broadcast models to the database registry.");
+                alert("Sign-in verification token required to broadcast open tools.");
                 openModal('authModal');
             } else {
                 openModal('uploadModal');
@@ -417,68 +315,114 @@
             const name = document.getElementById('toolName').value.trim();
             const pitch = document.getElementById('toolPitch').value.trim();
             const desc = document.getElementById('toolDesc').value.trim();
+            let mainImg = document.getElementById('toolImgMain').value.trim();
 
-            if(!name || !pitch || !desc) return alert("All payload arrays must be populated.");
+            if(!name || !pitch || !desc) return alert("Ensure all structural text lines are filled.");
+            if(!mainImg) mainImg = "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1000&auto=format&fit=crop";
 
-            const item = { id: Date.now(), name, pitch, desc, author: currentUsername };
-            tools.unshift(item);
+            const newItem = {
+                id: Date.now(),
+                name, pitch, desc, mainImg,
+                sideImg1: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop",
+                sideImg2: "https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=600&auto=format&fit=crop",
+                author: currentUsername
+            };
+
+            tools.unshift(newItem);
             localStorage.setItem('hub_tools', JSON.stringify(tools));
-            
             renderTools();
             closeModal('uploadModal');
-            
-            // Clear inputs
-            document.getElementById('toolName').value = '';
-            document.getElementById('toolPitch').value = '';
-            document.getElementById('toolDesc').value = '';
         }
 
-        function viewToolDetail(id) {
+        // SLIDES SYSTEM INTO A DEDICATED PRODUCT SPEC PAGE VIEW
+        function viewToolPage(id) {
             const target = tools.find(t => t.id === id);
-            const modalContent = document.getElementById('detailModalContent');
+            const home = document.getElementById('homeView');
+            const detail = document.getElementById('detailView');
             const toolComments = comments[id] || [];
 
             let commentListHTML = '';
             toolComments.forEach(c => {
                 commentListHTML += `
-                    <div class="comment-item">
-                        <div class="user-profile-icon" style="width:24px; height:24px; font-size:0.7rem; flex-shrink:0;">${c.user.substring(0,2).toUpperCase()}</div>
+                    <div class="comment-node">
+                        <div class="user-profile-icon" style="width:28px; height:28px; font-size:0.75rem; flex-shrink:0;">${c.user.substring(0,2)}</div>
                         <div>
-                            <div class="comment-meta">${c.user}</div>
-                            <div class="comment-text">${c.msg}</div>
+                            <div class="c-meta">${c.user} <span>System Participant</span></div>
+                            <div class="c-text">${c.msg}</div>
                         </div>
                     </div>
                 `;
             });
 
-            modalContent.innerHTML = `
-                <button class="close-btn" onclick="closeModal('detailModal')">&times;</button>
-                <div class="card-author" style="margin-bottom:1rem;">
-                    <div class="user-profile-icon" style="width:20px; height:20px; font-size:0.6rem;">${target.author.substring(0,2).toUpperCase()}</div>
-                    <span>Origin Node //</span> ${target.author}
+            // Set layout structure for detailed node view
+            detail.innerHTML = `
+                <div class="back-link" onclick="showHome()">&larr; Back to model registry index</div>
+                
+                <div class="detail-header">
+                    <div>
+                        <div class="card-author" style="font-size:0.9rem;">
+                            <div class="user-profile-icon" style="width:22px; height:22px; font-size:0.65rem;">${target.author.substring(0,2)}</div>
+                            <span>Origin Core Component // Posted by ${target.author}</span>
+                        </div>
+                        <h1>${target.name}</h1>
+                        <p style="font-size:1.2rem; color:#b5b5b5; font-weight:400; line-height:1.4;">${target.pitch}</p>
+                    </div>
                 </div>
-                <h2 style="color:var(--text-bright); margin-bottom:0.5rem; letter-spacing:-0.5px;">${target.name}</h2>
-                <p style="color:var(--text-bright); font-size:1rem; font-style:italic; margin-bottom:1.5rem;">"${target.pitch}"</p>
-                
-                <h5 style="color:var(--text-bright); font-size:0.85rem; margin-bottom:0.5rem; text-transform:uppercase;">Documentation Matrix</h5>
-                <p style="font-size:0.95rem; line-height:1.6; margin-bottom:2rem; color:#b3b3b3;">${target.desc}</p>
-                
-                <div class="comments-section">
-                    <h4 class="comments-title">Telemetry Reviews (${toolComments.length})</h4>
-                    <div id="commentBoxContainer">${commentListHTML}</div>
-                    
-                    <div class="comment-form">
-                        <input type="text" id="newCommentText" class="form-control" placeholder="${currentUsername ? 'Write analysis...' : 'Login to post analysis...'}">
-                        <button class="nav-btn" onclick="postComment(${target.id})">Post</button>
+
+                <div class="image-gallery">
+                    <div class="main-img-box">
+                        <img class="gallery-img" src="${target.mainImg}" alt="System UI Documentation">
+                    </div>
+                    <div class="side-images">
+                        <div class="side-img-box"><img class="gallery-img" src="${target.sideImg1}"></div>
+                        <div class="side-img-box"><img class="gallery-img" src="${target.sideImg2}"></div>
+                    </div>
+                </div>
+
+                <div class="detail-layout">
+                    <div class="doc-section">
+                        <h3>Configuration Manual & Scope</h3>
+                        <p>${target.desc.replace(/\n/g, "<br>")}</p>
+                        
+                        <div class="comment-box">
+                            <h3 style="border-none; font-size:1.2rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem; margin-bottom:1.5rem;">System Telemetry Reviews (${toolComments.length})</h3>
+                            
+                            <div class="comment-input-area">
+                                <div class="user-profile-icon" style="width:32px; height:32px; flex-shrink:0;">${currentUsername ? currentUsername.substring(0,2) : '?'}</div>
+                                <div style="width:100%; display:flex; gap:10px;">
+                                    <input type="text" id="newCommentText" class="form-control" placeholder="${currentUsername ? 'Broadcast configuration review logs...' : 'Sign in to access secure logging thread...'}">
+                                    <button class="nav-btn primary" style="padding:0.7rem 1.5rem;" onclick="postComment(${target.id})">Broadcast</button>
+                                </div>
+                            </div>
+
+                            <div class="comment-thread">${commentListHTML}</div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-specs">
+                        <div style="background:var(--surface-card); border:1px solid var(--border); padding:1.5rem; border-radius:8px;">
+                            <h5 style="color:var(--text-bright); margin-bottom:1rem; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.5px;">Model Context</h5>
+                            <p style="font-size:0.9rem; margin-bottom:0.8rem;"><strong style="color:white">Host:</strong> GitHub Pages</p>
+                            <p style="font-size:0.9rem; margin-bottom:0.8rem;"><strong style="color:white">State:</strong> Operational</p>
+                            <p style="font-size:0.9rem;"><strong style="color:white">Licensing:</strong> Open-Source MIT</p>
+                        </div>
                     </div>
                 </div>
             `;
-            openModal('detailModal');
+
+            home.style.display = "none";
+            detail.style.display = "block";
+            window.scrollTo(0,0);
+        }
+
+        function showHome() {
+            document.getElementById('homeView').style.display = "block";
+            document.getElementById('detailView').style.display = "none";
         }
 
         function postComment(toolId) {
             if(!currentUsername) {
-                alert("Login state required to log comment strings.");
+                alert("Identity verification required to push feedback streams.");
                 return openModal('authModal');
             }
             const msg = document.getElementById('newCommentText').value.trim();
@@ -488,7 +432,7 @@
             comments[toolId].push({ user: currentUsername, msg: msg });
             localStorage.setItem('hub_comments', JSON.stringify(comments));
             
-            viewToolDetail(toolId); // Refresh modal view
+            viewToolPage(toolId); // Hot reload views
         }
     </script>
 </body>
