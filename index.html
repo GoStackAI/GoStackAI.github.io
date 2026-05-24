@@ -24,15 +24,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: var(--bg); color: var(--text); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
-        /* --- IMMERSIVE INITIAL TERMINAL BOOT --- */
-        #splash { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--bg); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; font-family: monospace; }
-        .terminal-box { width: 320px; text-align: left; }
-        .line { overflow: hidden; white-space: nowrap; border-right: 2px solid var(--accent); width: 0; color: var(--text-bright); margin-bottom: 6px; font-size: 0.9rem; letter-spacing: 0.5px; }
-        .line1 { animation: type 0.5s steps(25) forwards; }
-        .line2 { animation: type 0.5s steps(25) 0.5s forwards; border-right: none; }
-        @keyframes type { from { width: 0 } to { width: 100% } }
-        @keyframes fadeOut { to { opacity: 0; visibility: hidden; filter: blur(10px); } }
-
         /* --- STICKY NAV ACCENTS --- */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 500; transition: border-color 0.3s; }
         .logo { font-weight: 700; color: var(--text-bright); font-size: 1.25rem; text-decoration: none; letter-spacing: -0.8px; transition: transform 0.2s var(--easing); }
@@ -131,13 +122,6 @@
     </style>
 </head>
 <body>
-
-    <div id="splash">
-        <div class="terminal-box">
-            <div class="line line1">> loading gostackai architecture...</div>
-            <div class="line line2">> secure handshake authorized.</div>
-        </div>
-    </div>
 
     <nav>
         <a href="#" class="logo" onclick="showHome()">GoStack<span>AI</span></a>
@@ -273,15 +257,10 @@
             ]
         };
 
+        // Renders content instantly upon DOM load
         window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const splash = document.getElementById('splash');
-                if (splash) {
-                    splash.style.animation = "fadeOut 0.3s var(--easing) forwards";
-                }
-                renderTools();
-                checkActiveSession();
-            }, 1000);
+            renderTools();
+            checkActiveSession();
         });
 
         function openModal(id) { document.getElementById(id).classList.add('active'); }
