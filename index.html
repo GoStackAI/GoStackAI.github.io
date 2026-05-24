@@ -3,153 +3,493 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoStackAI | The Ultimate AI Resource Hub</title>
+    <title>GoStackAI</title>
     <style>
         :root {
-            --bg-color: #0d1117;
-            --card-bg: #161b22;
-            --accent-blue: #58a6ff;
-            --text-main: #c9d1d9;
-            --text-bright: #f0f6fc;
+            --bg: #000000;
+            --surface: #0d0d0d;
+            --border: #1f1f1f;
+            --border-focus: #444444;
+            --text: #999999;
+            --text-bright: #ffffff;
+            --accent: #ffffff;
         }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
-        header {
-            background: linear-gradient(135deg, #1f2937, #111827);
-            padding: 4rem 2rem;
-            text-align: center;
-            border-bottom: 2px solid #21262d;
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
         }
-        header h1 {
+
+        /* --- OLLAMA STYLE SPLASH ANIMATION --- */
+        #splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--bg);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: monospace;
+        }
+        .terminal-box {
+            width: 300px;
+            text-align: left;
+        }
+        .line {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid var(--accent);
+            width: 0;
             color: var(--text-bright);
-            margin: 0;
-            font-size: 2.8rem;
-            letter-spacing: -1px;
+            margin-bottom: 5px;
         }
-        header h1 span {
-            color: var(--accent-blue);
+        .line1 { animation: type 0.8s steps(20) forwards; }
+        .line2 { animation: type 0.8s steps(25) delay 0.8s forwards; border-right: none; }
+        @keyframes type {
+            from { width: 0 }
+            to { width: 100% }
         }
-        header p {
-            color: #8b949e;
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 1rem auto 0 auto;
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
         }
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 3rem 1.5rem;
+
+        /* --- MAIN NAVIGATION --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            background-color: var(--bg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .section-title {
+        .logo {
+            font-weight: 700;
             color: var(--text-bright);
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid #21262d;
-            padding-bottom: 0.5rem;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            padding: 1.5rem;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-        .card:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent-blue);
-        }
-        .card h3 {
-            margin: 0 0 0.5rem 0;
-            color: var(--text-bright);
-        }
-        .card p {
-            color: #8b949e;
-            font-size: 0.95rem;
-            margin: 0 0 1.5rem 0;
-        }
-        .btn {
-            display: inline-block;
-            background-color: #21262d;
-            color: var(--accent-blue);
+            font-size: 1.25rem;
             text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+        .logo span { font-weight: 300; color: var(--text); }
+        .nav-right { display: flex; gap: 1rem; align-items: center; }
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-bright);
             padding: 0.5rem 1rem;
             border-radius: 6px;
+            cursor: pointer;
             font-size: 0.9rem;
-            font-weight: 600;
-            border: 1px solid #30363d;
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
-        .btn:hover {
-            background-color: var(--accent-blue);
-            color: var(--bg-color);
+        .nav-btn:hover { border-color: var(--border-focus); background-color: var(--surface); }
+        .user-profile-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #222;
+            border: 1px solid var(--border-focus);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-bright);
+            font-weight: bold;
+            font-size: 0.85rem;
         }
-        footer {
+
+        /* --- HERO & SEARCH (OLLAMA CLEAN) --- */
+        .hero {
+            max-width: 800px;
+            margin: 6rem auto 4rem auto;
             text-align: center;
-            padding: 2rem;
-            color: #8b949e;
-            font-size: 0.9rem;
-            border-top: 1px solid #21262d;
-            background-color: #161b22;
+            padding: 0 1rem;
         }
+        .hero h2 {
+            font-size: 3rem;
+            color: var(--text-bright);
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 1.5rem;
+        }
+        .search-container {
+            position: relative;
+            max-width: 600px;
+            margin: 2rem auto 0 auto;
+        }
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-bright);
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-input:focus { border-color: var(--border-focus); }
+
+        /* --- CONTENT SECTION --- */
+        .main-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem 6rem 2rem;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .section-header h3 { color: var(--text-bright); font-size: 1.2rem; }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .card:hover { border-color: var(--border-focus); }
+        .card-author {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .card-author span { color: #555; }
+        .card h4 { color: var(--text-bright); font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .card p { font-size: 0.9rem; color: var(--text); line-height: 1.4; }
+
+        /* --- THE MODAL OVERLAYS (POPUPS) --- */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(0,0,0,0.85);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 1000; opacity: 0; pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        .modal.active { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            width: 100%; max-width: 600px;
+            border-radius: 12px; padding: 2rem;
+            position: relative; max-height: 85vh; overflow-y: auto;
+        }
+        .close-btn {
+            position: absolute; top: 1.5rem; right: 1.5rem;
+            background: transparent; border: none; color: var(--text);
+            font-size: 1.5rem; cursor: pointer;
+        }
+        .close-btn:hover { color: var(--text-bright); }
+
+        /* --- AUTH FORMS & UPLOAD --- */
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--text-bright); margin-bottom: 0.5rem; }
+        .form-control {
+            width: 100%; padding: 0.75rem; background-color: var(--bg);
+            border: 1px solid var(--border); border-radius: 6px;
+            color: var(--text-bright); outline: none;
+        }
+        .form-control:focus { border-color: var(--border-focus); }
+        .submit-btn {
+            width: 100%; padding: 0.75rem; background: var(--accent);
+            color: var(--bg); font-weight: 600; border: none;
+            border-radius: 6px; cursor: pointer; margin-top: 0.5rem;
+        }
+
+        /* --- COMMENTS SECTIONS --- */
+        .comments-section { margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.5rem; }
+        .comments-title { font-size: 1rem; color: var(--text-bright); margin-bottom: 1rem; }
+        .comment-item {
+            display: flex; gap: 0.75rem; margin-bottom: 1rem;
+            background: var(--bg); padding: 0.75rem; border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+        .comment-meta { font-size: 0.85rem; color: var(--text-bright); font-weight: 600; margin-bottom: 0.2rem; display: flex; align-items: center; gap: 6px;}
+        .comment-text { font-size: 0.9rem; color: var(--text); }
+        .comment-form { display: flex; gap: 0.5rem; margin-top: 1rem; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>GoStack<span>AI</span> Hub</h1>
-        <p>Your curated directory for the absolute best artificial intelligence tools, cutting-edge resources, and tech shortcuts.</p>
-    </header>
-
-    <div class="container">
-        <h2 class="section-title">🔥 Featured AI Tools</h2>
-        <div class="grid">
-            <div class="card">
-                <h3>Advanced Generation</h3>
-                <p>The leading AI models for brainstorming, complex coding workflows, and breaking down massive technical ideas.</p>
-                <a href="https://chatgpt.com" target="_blank" class="btn">Explore Tool</a>
-            </div>
-            <div class="card">
-                <h3>Claude by Anthropic</h3>
-                <p>Unmatched for deep writing, analyzing long files, and acting as a world-class coding and strategy collaborator.</p>
-                <a href="https://claude.ai" target="_blank" class="btn">Explore Tool</a>
-            </div>
-            <div class="card">
-                <h3>Perplexity AI</h3>
-                <p>An answer engine that searches the live web in real-time, filters through data, and cites its sources directly.</p>
-                <a href="https://perplexity.ai" target="_blank" class="btn">Explore Tool</a>
-            </div>
-        </div>
-
-        <h2 class="section-title">⚡ Developer & Productivity Resources</h2>
-        <div class="grid">
-            <div class="card">
-                <h3>GitHub Pages</h3>
-                <p>Where this exact website is hosted! Zero-cost permanent server space for developers and creators worldwide.</p>
-                <a href="https://pages.github.com" target="_blank" class="btn">Learn Hosting</a>
-            </div>
-            <div class="card">
-                <h3>JS.org Registry</h3>
-                <p>The community-driven subdomain registrar offering sleek tech domain routing completely free for open projects.</p>
-                <a href="https://js.org" target="_blank" class="btn">Check Domains</a>
-            </div>
+    <div id="splash">
+        <div class="terminal-box">
+            <div class="line line1">> gostackai --init</div>
+            <div class="line line2">> fetching neural layers...</div>
         </div>
     </div>
 
-    <footer>
-        <p>&copy; 2026 GoStackAI. Handcrafted with GitHub Pages. Powered by Innovation.</p>
-    </footer>
+    <nav>
+        <a href="#" class="logo">GoStack<span>AI</span></a>
+        <div class="nav-right" id="navAuthArea">
+            <button class="nav-btn" onclick="openModal('authModal')">Sign In</button>
+        </div>
+    </nav>
 
+    <header class="hero">
+        <h2>Open-source models, curated.</h2>
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search models, tools, or stacks..." oninput="filterTools()">
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="section-header">
+            <h3>Library</h3>
+            <button class="nav-btn" id="uploadTriggerBtn" onclick="checkAuthAndOpenUpload()">+ Share Model</button>
+        </div>
+        <div class="grid" id="toolsGrid">
+            </div>
+    </main>
+
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('authModal')">&times;</button>
+            <h3 style="color: var(--text-bright); margin-bottom: 1.5rem;">Access Hub</h3>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="authUsername" class="form-control" placeholder="e.g., alex_dev">
+            </div>
+            <button class="submit-btn" onclick="simulateLogin()">Initialize Profile</button>
+        </div>
+    </div>
+
+    <div class="modal" id="uploadModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
+            <h3 style="color: var(--text-bright); margin-bottom: 1.5rem;">Publish Architecture</h3>
+            <div class="form-group">
+                <label>Tool/Model Name</label>
+                <input type="text" id="toolName" class="form-control" placeholder="e.g., Llama-3-Custom">
+            </div>
+            <div class="form-group">
+                <label>Short Pitch</label>
+                <input type="text" id="toolPitch" class="form-control" placeholder="Brief one-sentence utility description">
+            </div>
+            <div class="form-group">
+                <label>Complete Specifications & Documentation</label>
+                <textarea id="toolDesc" class="form-control" rows="4" placeholder="Detailed analysis, instructions, and integration frameworks..."></textarea>
+            </div>
+            <button class="submit-btn" onclick="addNewTool()">Push to Registry</button>
+        </div>
+    </div>
+
+    <div class="modal" id="detailModal">
+        <div class="modal-content" id="detailModalContent">
+            </div>
+    </div>
+
+    <script>
+        // Default official items posted by you
+        const baseTools = [
+            {
+                id: 1,
+                name: "Advanced Generation Pipeline",
+                pitch: "State-of-the-art text execution model built for intricate multi-agent orchestration.",
+                desc: "This framework delivers highly cohesive multi-turn contextual tracking. Excellent for building deep semantic structures, processing data matrix patterns, or scaling context execution up to 128k parameters seamlessly.",
+                author: "GoStackAI"
+            },
+            {
+                id: 2,
+                name: "Claude-3.5 Strategy Layer",
+                pitch: "Expert automation module calibrated specifically for software design architecture patterns.",
+                desc: "An optimization matrix built to map code structures, read repository dependencies, and generate high-fidelity technical diagrams. Designed explicitly to sit inline with continuous deployment environments.",
+                author: "GoStackAI"
+            },
+            {
+                id: 3,
+                name: "Perplexity Research Matrix",
+                pitch: "Real-time query agent that maps contextual graph nodes across current live infrastructure data.",
+                desc: "Bypasses standard algorithmic delays to cross-reference search intent across web clusters instantly, pulling verifiable source footnotes back to your core machine terminal interface safely.",
+                author: "GoStackAI"
+            }
+        ];
+
+        let currentUsername = localStorage.getItem('hub_user') || null;
+        let tools = JSON.parse(localStorage.getItem('hub_tools')) || baseTools;
+        let comments = JSON.parse(localStorage.getItem('hub_comments')) || {};
+
+        // Fade splash animation screen out
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash');
+                splash.style.animation = "fadeOut 0.4s forwards";
+                renderTools();
+                updateAuthUI();
+            }, 1800);
+        });
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function updateAuthUI() {
+            const container = document.getElementById('navAuthArea');
+            if(currentUsername) {
+                container.innerHTML = `
+                    <div class="user-profile-icon">${currentUsername.substring(0,2).toUpperCase()}</div>
+                    <span style="font-size:0.9rem; color:var(--text-bright)">${currentUsername}</span>
+                    <button class="nav-btn" style="padding: 0.3rem 0.6rem; font-size:0.8rem;" onclick="logout()">Disconnect</button>
+                `;
+            } else {
+                container.innerHTML = `<button class="nav-btn" onclick="openModal('authModal')">Sign In</button>`;
+            }
+        }
+
+        function simulateLogin() {
+            const user = document.getElementById('authUsername').value.trim();
+            if(!user) return alert("Enter an identifier token.");
+            currentUsername = user;
+            localStorage.setItem('hub_user', user);
+            updateAuthUI();
+            closeModal('authModal');
+        }
+
+        function logout() {
+            localStorage.removeItem('hub_user');
+            currentUsername = null;
+            updateAuthUI();
+        }
+
+        function renderTools() {
+            const grid = document.getElementById('toolsGrid');
+            grid.innerHTML = '';
+            tools.forEach(t => {
+                grid.innerHTML += `
+                    <div class="card" onclick="viewToolDetail(${t.id})">
+                        <div class="card-author">
+                            <div class="user-profile-icon" style="width:16px; height:16px; font-size:0.5rem;">${t.author.substring(0,2).toUpperCase()}</div>
+                            <span>Posted by</span> ${t.author}
+                        </div>
+                        <h4>${t.name}</h4>
+                        <p>${t.pitch}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function filterTools() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('#toolsGrid .card');
+            tools.forEach((t, i) => {
+                const match = t.name.toLowerCase().includes(query) || t.pitch.toLowerCase().includes(query) || t.desc.toLowerCase().includes(query);
+                cards[i].style.display = match ? 'block' : 'none';
+            });
+        }
+
+        function checkAuthAndOpenUpload() {
+            if(!currentUsername) {
+                alert("Authentication required to broadcast models to the database registry.");
+                openModal('authModal');
+            } else {
+                openModal('uploadModal');
+            }
+        }
+
+        function addNewTool() {
+            const name = document.getElementById('toolName').value.trim();
+            const pitch = document.getElementById('toolPitch').value.trim();
+            const desc = document.getElementById('toolDesc').value.trim();
+
+            if(!name || !pitch || !desc) return alert("All payload arrays must be populated.");
+
+            const item = { id: Date.now(), name, pitch, desc, author: currentUsername };
+            tools.unshift(item);
+            localStorage.setItem('hub_tools', JSON.stringify(tools));
+            
+            renderTools();
+            closeModal('uploadModal');
+            
+            // Clear inputs
+            document.getElementById('toolName').value = '';
+            document.getElementById('toolPitch').value = '';
+            document.getElementById('toolDesc').value = '';
+        }
+
+        function viewToolDetail(id) {
+            const target = tools.find(t => t.id === id);
+            const modalContent = document.getElementById('detailModalContent');
+            const toolComments = comments[id] || [];
+
+            let commentListHTML = '';
+            toolComments.forEach(c => {
+                commentListHTML += `
+                    <div class="comment-item">
+                        <div class="user-profile-icon" style="width:24px; height:24px; font-size:0.7rem; flex-shrink:0;">${c.user.substring(0,2).toUpperCase()}</div>
+                        <div>
+                            <div class="comment-meta">${c.user}</div>
+                            <div class="comment-text">${c.msg}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            modalContent.innerHTML = `
+                <button class="close-btn" onclick="closeModal('detailModal')">&times;</button>
+                <div class="card-author" style="margin-bottom:1rem;">
+                    <div class="user-profile-icon" style="width:20px; height:20px; font-size:0.6rem;">${target.author.substring(0,2).toUpperCase()}</div>
+                    <span>Origin Node //</span> ${target.author}
+                </div>
+                <h2 style="color:var(--text-bright); margin-bottom:0.5rem; letter-spacing:-0.5px;">${target.name}</h2>
+                <p style="color:var(--text-bright); font-size:1rem; font-style:italic; margin-bottom:1.5rem;">"${target.pitch}"</p>
+                
+                <h5 style="color:var(--text-bright); font-size:0.85rem; margin-bottom:0.5rem; text-transform:uppercase;">Documentation Matrix</h5>
+                <p style="font-size:0.95rem; line-height:1.6; margin-bottom:2rem; color:#b3b3b3;">${target.desc}</p>
+                
+                <div class="comments-section">
+                    <h4 class="comments-title">Telemetry Reviews (${toolComments.length})</h4>
+                    <div id="commentBoxContainer">${commentListHTML}</div>
+                    
+                    <div class="comment-form">
+                        <input type="text" id="newCommentText" class="form-control" placeholder="${currentUsername ? 'Write analysis...' : 'Login to post analysis...'}">
+                        <button class="nav-btn" onclick="postComment(${target.id})">Post</button>
+                    </div>
+                </div>
+            `;
+            openModal('detailModal');
+        }
+
+        function postComment(toolId) {
+            if(!currentUsername) {
+                alert("Login state required to log comment strings.");
+                return openModal('authModal');
+            }
+            const msg = document.getElementById('newCommentText').value.trim();
+            if(!msg) return;
+
+            if(!comments[toolId]) comments[toolId] = [];
+            comments[toolId].push({ user: currentUsername, msg: msg });
+            localStorage.setItem('hub_comments', JSON.stringify(comments));
+            
+            viewToolDetail(toolId); // Refresh modal view
+        }
+    </script>
 </body>
 </html>
