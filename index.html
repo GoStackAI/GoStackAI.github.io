@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoStackAI | The Ultimate AI Resource Hub</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --accent-blue: #58a6ff;
+            --text-main: #c9d1d9;
+            --text-bright: #f0f6fc;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(135deg, #1f2937, #111827);
+            padding: 4rem 2rem;
+            text-align: center;
+            border-bottom: 2px solid #21262d;
+        }
+        header h1 {
+            color: var(--text-bright);
+            margin: 0;
+            font-size: 2.8rem;
+            letter-spacing: -1px;
+        }
+        header h1 span {
+            color: var(--accent-blue);
+        }
+        header p {
+            color: #8b949e;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 1rem auto 0 auto;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+        .section-title {
+            color: var(--text-bright);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #21262d;
+            padding-bottom: 0.5rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-blue);
+        }
+        .card h3 {
+            margin: 0 0 0.5rem 0;
+            color: var(--text-bright);
+        }
+        .card p {
+            color: #8b949e;
+            font-size: 0.95rem;
+            margin: 0 0 1.5rem 0;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #21262d;
+            color: var(--accent-blue);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid #30363d;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background-color: var(--accent-blue);
+            color: var(--bg-color);
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #8b949e;
+            font-size: 0.9rem;
+            border-top: 1px solid #21262d;
+            background-color: #161b22;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>GoStack<span>AI</span> Hub</h1>
+        <p>Your curated directory for the absolute best artificial intelligence tools, cutting-edge resources, and tech shortcuts.</p>
+    </header>
+
+    <div class="container">
+        <h2 class="section-title">🔥 Featured AI Tools</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Advanced Generation</h3>
+                <p>The leading AI models for brainstorming, complex coding workflows, and breaking down massive technical ideas.</p>
+                <a href="https://chatgpt.com" target="_blank" class="btn">Explore Tool</a>
+            </div>
+            <div class="card">
+                <h3>Claude by Anthropic</h3>
+                <p>Unmatched for deep writing, analyzing long files, and acting as a world-class coding and strategy collaborator.</p>
+                <a href="https://claude.ai" target="_blank" class="btn">Explore Tool</a>
+            </div>
+            <div class="card">
+                <h3>Perplexity AI</h3>
+                <p>An answer engine that searches the live web in real-time, filters through data, and cites its sources directly.</p>
+                <a href="https://perplexity.ai" target="_blank" class="btn">Explore Tool</a>
+            </div>
+        </div>
+
+        <h2 class="section-title">⚡ Developer & Productivity Resources</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>GitHub Pages</h3>
+                <p>Where this exact website is hosted! Zero-cost permanent server space for developers and creators worldwide.</p>
+                <a href="https://pages.github.com" target="_blank" class="btn">Learn Hosting</a>
+            </div>
+            <div class="card">
+                <h3>JS.org Registry</h3>
+                <p>The community-driven subdomain registrar offering sleek tech domain routing completely free for open projects.</p>
+                <a href="https://js.org" target="_blank" class="btn">Check Domains</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 GoStackAI. Handcrafted with GitHub Pages. Powered by Innovation.</p>
+    </footer>
+
+</body>
+</html>
