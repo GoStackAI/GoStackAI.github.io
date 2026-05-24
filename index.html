@@ -227,13 +227,27 @@
         /* ==========================================
            BACKEND INFRASTRUCTURE CONFIGURATION (SUPABASE)
            ========================================== */
-        // PLACE YOUR REPO KEYS HERE ONCE COPIED TO GO ACTIVE DYNAMICALLY
         const SUPABASE_URL = "https://fjawzbenaqzdrfigyamy.supabase.co"; 
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqYXd6YmVuYXF6ZHJmaWd5YW15Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2Mzc2MDEsImV4cCI6MjA5NTIxMzYwMX0.2Hg2gRgOG2Ip6dmlcKyjzPC4upT4Nvs_HpkLrNxX2Fg";
         
         let supabase = null;
-        if (!SUPABASE_URL.includes("YOUR_PROJECT_ID")) {
-            supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        if (typeof supabasev2 !== 'undefined') {
+            // Check if user updated placeholders before running architecture clients
+            if (SUPABASE_URL && !SUPABASE_URL.includes("YOUR_PROJECT_ID")) {
+                try {
+                    supabase = supabasev2.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                } catch(e) {
+                    console.error("Supabase link bypassed.", e);
+                }
+            }
+        } else if (typeof window.supabase !== 'undefined') {
+            if (SUPABASE_URL && !SUPABASE_URL.includes("YOUR_PROJECT_ID")) {
+                try {
+                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                } catch(e) {
+                    console.error("Supabase initialization bypassed.", e);
+                }
+            }
         }
 
         // Baseline registry mock layers
@@ -272,7 +286,10 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
-                document.getElementById('splash').style.animation = "fadeOut 0.3s var(--easing) forwards";
+                const splash = document.getElementById('splash');
+                if (splash) {
+                    splash.style.animation = "fadeOut 0.3s var(--easing) forwards";
+                }
                 renderTools();
                 checkActiveSession();
             }, 1000);
@@ -309,7 +326,6 @@
         /* --- AUTH REAL LIFTS --- */
         async function checkActiveSession() {
             if (!supabase) {
-                // Read local store if cloud credentials aren't active yet
                 let saved = localStorage.getItem('hub_user_email');
                 if(saved) { currentUser = { email: saved }; updateAuthUI(); }
                 return;
@@ -323,14 +339,12 @@
 
         async function triggerOAuth(provider) {
             if (!supabase) {
-                // If backend keys aren't added yet, run high-fidelity simulation route
                 currentUser = { email: provider === 'google' ? 'google_dev@gostack.ai' : 'git_node@gostack.ai' };
                 localStorage.setItem('hub_user_email', currentUser.email);
                 updateAuthUI();
                 closeModal('authModal');
                 return;
             }
-            // Trigger enterprise structural OAuth redirect sequence
             await supabase.auth.signInWithOAuth({ provider: provider, options: { redirectTo: window.location.href } });
         }
 
@@ -384,6 +398,7 @@
         /* --- DISPLAY LAYOUT RENDER COMPILING --- */
         function renderTools() {
             const grid = document.getElementById('toolsGrid');
+            if (!grid) return;
             grid.innerHTML = '';
             tools.forEach(t => {
                 grid.innerHTML += `
@@ -404,7 +419,7 @@
             const cards = document.querySelectorAll('#toolsGrid .card');
             tools.forEach((t, i) => {
                 const match = t.name.toLowerCase().includes(query) || t.pitch.toLowerCase().includes(query);
-                cards[i].style.display = match ? 'block' : 'none';
+                if (cards[i]) cards[i].style.display = match ? 'block' : 'none';
             });
         }
 
@@ -440,7 +455,6 @@
             const home = document.getElementById('homeView');
             const detail = document.getElementById('detailView');
             
-            // Phase 1: Compress and dim main directory canvas
             home.style.opacity = "0";
             home.style.transform = "scale(0.98)";
             
@@ -449,7 +463,6 @@
                 compileProductPage(id);
                 detail.style.display = "block";
                 
-                // Phase 2: Slide and expand documentation sheets smoothly
                 setTimeout(() => { detail.classList.add('active'); }, 50);
             }, 300);
         }
@@ -541,7 +554,7 @@
             comments[toolId].push({ user: currentUser.email.split('@')[0], msg: msg });
             localStorage.setItem('hub_comments', JSON.stringify(comments));
             
-            compileProductPage(toolId); // Hot render layout blocks
+            compileProductPage(toolId);
         }
     </script>
 </body>
