@@ -9,7 +9,531 @@
         :root {
             --bg: #000000;
             --surface: #0a0a0a;
+            --surface-card: #0d0d0d;<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoStackAI | The Decentralized Registry</title>
+    
+    <style>
+        :root {
+            --bg: #000000;
+            --surface: #0a0a0a;
             --surface-card: #0d0d0d;
+            --border: #1a1a1a;
+            --border-hover: #333333;
+            --text-muted: #666666;
+            --text: #999999;
+            --text-bright: #ffffff;
+            --accent: #ffffff;
+            --easing: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+        /* --- STICKY NAVIGATION --- */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 500; transition: border-color 0.3s; }
+        .logo { font-weight: 700; color: var(--text-bright); font-size: 1.25rem; text-decoration: none; letter-spacing: -0.8px; transition: transform 0.2s var(--easing); }
+        .logo:hover { transform: scale(1.02); }
+        .logo span { font-weight: 300; color: var(--text-muted); }
+        
+        .nav-right { display: flex; gap: 0.85rem; align-items: center; }
+        .nav-btn { background: transparent; border: 1px solid var(--border); color: var(--text-bright); padding: 0.55rem 1.25rem; border-radius: 6px; cursor: pointer; font-size: 0.88rem; transition: all 0.3s var(--easing); font-weight: 500; position: relative; overflow: hidden; }
+        .nav-btn:hover { border-color: var(--border-hover); background-color: var(--surface); transform: translateY(-1px); }
+        .nav-btn:active { transform: translateY(0); }
+        .nav-btn.primary { background-color: var(--accent); color: var(--bg); border: 1px solid var(--accent); }
+        .nav-btn.primary:hover { background-color: #e5e5e5; box-shadow: 0 4px 12px rgba(255,255,255,0.08); }
+        
+        /* --- DASHBOARD HERO SECTION --- */
+        #homeView { max-width: 1200px; margin: 0 auto; padding: 6rem 2.5rem; transition: opacity 0.4s var(--easing), transform 0.4s var(--easing); }
+        .hero { text-align: center; max-width: 800px; margin: 0 auto 6rem auto; }
+        .hero h2 { font-size: 4rem; color: var(--text-bright); font-weight: 700; letter-spacing: -1.8px; margin-bottom: 1.2rem; line-height: 1.05; }
+        .hero p { font-size: 1.25rem; color: var(--text); margin-bottom: 3rem; font-weight: 400; letter-spacing: -0.2px; }
+        
+        /* SEARCH COMPONENT */
+        .search-wrapper { position: relative; max-width: 540px; margin: 0 auto; }
+        .search-input { width: 100%; padding: 1.1rem 1.75rem; background-color: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text-bright); font-size: 1.05rem; outline: none; transition: all 0.3s var(--easing); text-align: center; }
+        .search-input:focus { border-color: var(--border-hover); background-color: #0c0c0c; box-shadow: 0 0 0 4px rgba(255,255,255,0.02); }
+
+        /* --- PARAMETER INTERACTIVE GRID --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.75rem; margin-top: 3.5rem; }
+        .card { background-color: var(--surface-card); border: 1px solid var(--border); border-radius: 8px; padding: 2rem; cursor: pointer; transition: all 0.4s var(--easing); position: relative; }
+        .card:hover { border-color: var(--border-hover); transform: translateY(-4px) scale(1.01); box-shadow: 0 12px 24px rgba(0,0,0,0.4); }
+        .card-author { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 8px; font-weight: 500; }
+        .card h4 { color: var(--text-bright); font-size: 1.35rem; margin-bottom: 0.6rem; letter-spacing: -0.4px; font-weight: 600; }
+        .card p { font-size: 0.98rem; color: var(--text); line-height: 1.55; }
+
+        /* --- DEEP ARCHITECTURE VIEW --- */
+        #detailView { display: none; max-width: 1100px; margin: 0 auto; padding: 4rem 2.5rem 8rem 2.5rem; opacity: 0; transform: translateY(20px); transition: all 0.5s var(--easing); }
+        #detailView.active { opacity: 1; transform: translateY(0); }
+        
+        .back-link { display: inline-flex; align-items: center; gap: 10px; color: var(--text-muted); text-decoration: none; font-size: 0.95rem; margin-bottom: 3rem; cursor: pointer; transition: color 0.2s; font-weight: 500; }
+        .back-link:hover { color: var(--text-bright); }
+        
+        .detail-header { margin-bottom: 2rem; }
+        .detail-header h1 { font-size: 3.5rem; color: var(--text-bright); letter-spacing: -1.5px; margin-bottom: 0.8rem; font-weight: 700; }
+        
+        /* MULTI-MEDIA TILES */
+        .image-gallery { display: grid; grid-template-columns: 2.2fr 1fr; gap: 1.25rem; margin: 3.5rem 0; }
+        .main-img-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; height: 420px; overflow: hidden; position: relative; }
+        .side-img-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; height: 204px; overflow: hidden; }
+        .side-images { display: flex; flex-direction: column; gap: 1.25rem; }
+        .gallery-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s var(--easing); }
+        .main-img-box:hover .gallery-img, .side-img-box:hover .gallery-img { transform: scale(1.03); }
+
+        .detail-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 4rem; }
+        @media(max-width: 900px) { .detail-layout { grid-template-columns: 1fr; gap: 2.5rem; } }
+        
+        .doc-section h3 { color: var(--text-bright); font-size: 1.4rem; margin-bottom: 1.2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.6rem; letter-spacing: -0.3px; }
+        .doc-section p { font-size: 1.08rem; line-height: 1.75; color: #b0b0b0; margin-bottom: 2.5rem; }
+
+        /* --- CORE SIDEBAR DOWNLOAD CONTROLS --- */
+        .sidebar-panel { background: var(--surface-card); border: 1px solid var(--border); padding: 2rem; border-radius: 12px; height: max-content; position: sticky; top: 100px; }
+        .sidebar-title { color: var(--text-bright); font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
+        
+        .terminal-block { background: #000; border: 1px solid var(--border); border-radius: 6px; padding: 1rem; font-family: monospace; font-size: 0.85rem; color: #00ff66; margin-bottom: 1.5rem; word-break: break-all; position: relative; }
+        .terminal-block::before { content: 'Terminal Command'; position: absolute; top: -9px; left: 12px; background: var(--surface-card); padding: 0 6px; font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; }
+
+        /* PROGRESS ENGINE STYLING */
+        .progress-container { margin-top: 1.25rem; display: none; }
+        .progress-meta { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-bright); margin-bottom: 0.4rem; font-family: monospace; }
+        .progress-track { width: 100%; height: 4px; background: #111; border-radius: 2px; overflow: hidden; }
+        .progress-bar { width: 0%; height: 100%; background: var(--text-bright); transition: width 0.1s linear; }
+
+        /* --- AUTHENTICATION & UPLOAD MODALS --- */
+        .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.92); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: all 0.3s var(--easing); backdrop-filter: blur(8px); }
+        .modal.active { opacity: 1; pointer-events: auto; }
+        .modal-content { background-color: var(--surface); border: 1px solid var(--border); width: 100%; max-width: 440px; border-radius: 16px; padding: 3rem; position: relative; transform: scale(0.95); transition: transform 0.3s var(--easing); }
+        .modal.active .modal-content { transform: scale(1); }
+        .close-btn { position: absolute; top: 1.5rem; right: 1.5rem; background: transparent; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; transition: color 0.2s; }
+        .close-btn:hover { color: var(--text-bright); }
+
+        .form-group { margin-bottom: 1.4rem; text-align: left; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--text-bright); margin-bottom: 0.5rem; font-weight: 500; }
+        .form-control { width: 100%; padding: 0.85rem; background-color: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text-bright); outline: none; font-size: 0.98rem; transition: border-color 0.2s; }
+        .form-control:focus { border-color: var(--border-hover); }
+        .submit-btn { width: 100%; padding: 0.9rem; background: var(--accent); color: var(--bg); font-weight: 600; border: none; border-radius: 8px; cursor: pointer; margin-top: 0.5rem; font-size: 0.98rem; transition: opacity 0.2s; }
+        .submit-btn:hover { opacity: 0.9; }
+
+        .auth-toggle-text { font-size: 0.88rem; color: var(--text); margin-top: 1.5rem; }
+        .auth-toggle-text span { color: var(--text-bright); cursor: pointer; font-weight: 500; text-decoration: underline; }
+
+        /* --- FEEDBACK LOOP & COMMUNICATIONS --- */
+        .comment-box { margin-top: 4rem; border-top: 1px solid var(--border); padding-top: 3rem; }
+        .comment-thread { display: flex; flex-direction: column; gap: 1.5rem; }
+        .comment-node { display: flex; gap: 1.25rem; background: var(--surface-card); border: 1px solid var(--border); padding: 1.5rem; border-radius: 10px; animation: nodeSlide 0.4s var(--easing); }
+        @keyframes nodeSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .c-meta { display: flex; align-items: center; gap: 10px; font-size: 0.92rem; color: var(--text-bright); font-weight: 600; margin-bottom: 0.5rem; }
+        .c-meta span { color: var(--text-muted); font-weight: 400; font-size: 0.8rem; }
+        .c-text { font-size: 1rem; color: #cccccc; line-height: 1.6; }
+
+        .user-profile-icon { width: 36px; height: 36px; border-radius: 50%; background: #141414; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-bright); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; flex-shrink: 0; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#" class="logo" onclick="showHome()">GoStack<span>AI</span></a>
+        <div class="nav-right" id="navAuthArea">
+            <button class="nav-btn" onclick="openAuthModal('signin')">Sign In</button>
+            <button class="nav-btn primary" onclick="openAuthModal('signup')">Sign Up</button>
+        </div>
+    </nav>
+
+    <div id="homeView">
+        <header class="hero">
+            <h2>Run your ideas.</h2>
+            <p>A minimalist catalog for localized models, technical parameters, and configuration blocks.</p>
+            <div class="search-wrapper">
+                <input type="text" class="search-input" id="searchInput" placeholder="Filter parameters..." oninput="filterTools()">
+            </div>
+        </header>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:1.25rem;">
+            <h3 style="color:var(--text-bright); font-size:1.1rem; font-weight:600; letter-spacing:-0.2px;">Available Configurations</h3>
+            <button class="nav-btn primary" onclick="checkAuthAndOpenUpload()">+ Broadcast Model</button>
+        </div>
+
+        <div class="grid" id="toolsGrid"></div>
+    </div>
+
+    <div id="detailView"></div>
+
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('authModal')">&times;</button>
+            <h3 id="authTitle" style="color: var(--text-bright); margin-bottom: 0.4rem; font-size: 1.6rem; letter-spacing: -0.5px;">Welcome to GoStackAI</h3>
+            <p id="authDesc" style="font-size:0.88rem; color:var(--text-muted); margin-bottom:2.2rem;">Authenticate network identities to execute sync states.</p>
+            
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="authUsername" class="form-control" placeholder="developer_node">
+            </div>
+            <div class="form-group">
+                <label>Security Password</label>
+                <input type="password" id="authPassword" class="form-control" placeholder="••••••••">
+            </div>
+            <button class="submit-btn" id="authSubmitBtn" onclick="handleLocalAuth()">Access Configuration</button>
+            
+            <p class="auth-toggle-text" id="authToggleArea">
+                Don't have a profile? <span onclick="toggleAuthMode('signup')">Register Token</span>
+            </p>
+        </div>
+    </div>
+
+    <div class="modal" id="uploadModal">
+        <div class="modal-content" style="max-width: 550px;">
+            <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
+            <h3 style="color: var(--text-bright); margin-bottom: 1.5rem; font-size:1.4rem; letter-spacing:-0.3px;">Broadcast Component Block</h3>
+            <div class="form-group">
+                <label>Architecture Configuration Name</label>
+                <input type="text" id="toolName" class="form-control" placeholder="e.g., GoStack-LLM-Core">
+            </div>
+            <div class="form-group">
+                <label>Short Pitch Line</label>
+                <input type="text" id="toolPitch" class="form-control" placeholder="One clear conceptual capability statement...">
+            </div>
+            <div class="form-group">
+                <label>Primary Showcase Image URL</label>
+                <input type="text" id="toolImgMain" class="form-control" placeholder="https://images.unsplash.com/your-image...">
+            </div>
+            <div class="form-group">
+                <label>Deep Documentation and System Requirements</label>
+                <textarea id="toolDesc" class="form-control" rows="5" placeholder="Input core specs, hyper-parameters, configurations..."></textarea>
+            </div>
+            <button class="submit-btn" onclick="addNewTool()">Inject to Live Registry</button>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================
+           LOCAL ENGINE DATABASE ARCHITECTURE
+           ========================================== */
+        const baseTools = [
+            {
+                id: 1,
+                slug: "neural-pipeline-v4",
+                name: "Neural Pipeline V4",
+                pitch: "State-of-the-art text execution model built for intricate multi-agent cluster orchestrations.",
+                desc: "An optimization system calibrated strictly to control contextual threads across distributed clusters. Delivers highly accurate prompt pipeline expansion, memory array formatting, and high-frequency code file analytics natively on consumer hardware profiles.\n\n### Core System Benchmarks\n- Context Parameter Target: 128k unified canvas arrays\n- Compute Vector Processing Density: 4.88 TFLOP tokens\n- Neural Mapping Logic Node Depth: 94 automated layers",
+                author: "GoStackAI",
+                mainImg: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop",
+                sideImg1: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=600&auto=format&fit=crop",
+                sideImg2: "https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=600&auto=format&fit=crop"
+            },
+            {
+                id: 2,
+                slug: "claude-strategy-module",
+                name: "Claude-3.5 Strategy Module",
+                pitch: "Expert system automation pipeline mapped specifically to trace and design massive software architectures.",
+                desc: "Built to read continuous integration hooks across open standard staging servers. Scans active repositories, builds interactive code dependency files, updates component layers automatically, and surfaces deep architectural maps through a unified interface system layout structure.",
+                author: "GoStackAI",
+                mainImg: "https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=1000&auto=format&fit=crop",
+                sideImg1: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop",
+                sideImg2: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=600&auto=format&fit=crop"
+            }
+        ];
+
+        let currentUser = null;
+        let activeAuthMode = 'signin';
+        let tools = JSON.parse(localStorage.getItem('hub_tools')) || baseTools;
+        let userDatabase = JSON.parse(localStorage.getItem('hub_users')) || {};
+        
+        let comments = JSON.parse(localStorage.getItem('hub_comments')) || {
+            1: [
+                { user: "GoStackAI", msg: "Telemetry verification confirmed. Production weights responsive." },
+                { user: "dev_cluster", msg: "Extremely clean execution profiles across edge runtimes." }
+            ]
+        };
+
+        // Render layout safely when DOM initializes
+        window.addEventListener('DOMContentLoaded', () => {
+            renderTools();
+            checkActiveSession();
+        });
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function openAuthModal(mode) {
+            toggleAuthMode(mode);
+            openModal('authModal');
+        }
+
+        function toggleAuthMode(mode) {
+            activeAuthMode = mode;
+            const title = document.getElementById('authTitle');
+            const desc = document.getElementById('authDesc');
+            const btn = document.getElementById('authSubmitBtn');
+            const toggle = document.getElementById('authToggleArea');
+
+            if(mode === 'signup') {
+                title.innerText = "Initialize Core Token";
+                desc.innerText = "Create an authenticated global developer node profile.";
+                btn.innerText = "Build Registry Node";
+                toggle.innerHTML = `Already mapped? <span onclick="toggleAuthMode('signin')">Access Session</span>`;
+            } else {
+                title.innerText = "Welcome to GoStackAI";
+                desc.innerText = "Authenticate network identities to execute sync states.";
+                btn.innerText = "Access Configuration";
+                toggle.innerHTML = `Don't have a profile? <span onclick="toggleAuthMode('signup')">Register Token</span>`;
+            }
+        }
+
+        /* --- IMMUTABLE LOCAL ACCOUNT ENGINE --- */
+        function checkActiveSession() {
+            let savedUser = localStorage.getItem('hub_active_session');
+            if(savedUser) {
+                currentUser = { username: savedUser };
+                updateAuthUI();
+            }
+        }
+
+        function handleLocalAuth() {
+            const username = document.getElementById('authUsername').value.trim();
+            const password = document.getElementById('authPassword').value.trim();
+            
+            if(!username || !password) return alert("All fields are mandatory.");
+
+            if(activeAuthMode === 'signup') {
+                if(userDatabase[username.toLowerCase()]) {
+                    return alert("This username identification is already claimed.");
+                }
+                userDatabase[username.toLowerCase()] = password;
+                localStorage.setItem('hub_users', JSON.stringify(userDatabase));
+                
+                alert("Profile node created successfully! You can log in now.");
+                toggleAuthMode('signin');
+            } else {
+                if(userDatabase[username.toLowerCase()] && userDatabase[username.toLowerCase()] === password) {
+                    currentUser = { username: username };
+                    localStorage.setItem('hub_active_session', username);
+                    updateAuthUI();
+                    closeModal('authModal');
+                } else {
+                    alert("Invalid node username credential or network password.");
+                }
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('hub_active_session');
+            currentUser = null;
+            updateAuthUI();
+            showHome();
+        }
+
+        function updateAuthUI() {
+            const container = document.getElementById('navAuthArea');
+            if(currentUser) {
+                let initial = currentUser.username.substring(0,2);
+                container.innerHTML = `
+                    <div class="user-profile-icon" style="width:32px; height:32px; font-size:0.8rem; border-radius:50%; background:#141414; border:1px solid var(--border); display:inline-flex; align-items:center; justify-content:center; color:white; font-weight:600; text-transform:uppercase; margin-right:8px;">${initial}</div>
+                    <span style="font-size:0.9rem; color:var(--text-bright); font-weight:500; margin-right:12px;">${currentUser.username}</span>
+                    <button class="nav-btn" style="padding:0.4rem 0.85rem; font-size:0.8rem;" onclick="logout()">Disconnect</button>
+                `;
+            } else {
+                container.innerHTML = `
+                    <button class="nav-btn" onclick="openAuthModal('signin')">Sign In</button>
+                    <button class="nav-btn primary" onclick="openAuthModal('signup')">Sign Up</button>
+                `;
+            }
+        }
+
+        /* --- MODEL DOWNLOAD ENGINE (OLLAMA LAYER PREP) --- */
+        function triggerModelDownload(slug) {
+            const btn = document.getElementById('dl-main-btn');
+            const progressArea = document.getElementById('dl-progress-box');
+            const progressBar = document.getElementById('dl-bar');
+            const progressPercent = document.getElementById('dl-percent');
+            
+            btn.disabled = true;
+            btn.innerText = "Extracting Layers...";
+            btn.style.opacity = "0.5";
+            progressArea.style.display = "block";
+            
+            let percentage = 0;
+            const interval = setInterval(() => {
+                percentage += Math.floor(Math.random() * 8) + 2;
+                if(percentage >= 100) {
+                    percentage = 100;
+                    clearInterval(interval);
+                    btn.innerText = "Model Ready // Local Instance Connected";
+                    btn.style.background = "#00ff66";
+                    btn.style.color = "#000";
+                    btn.style.opacity = "1";
+                    alert(`Model sync successful. Launch your chatbox app with: gostack run ${slug}`);
+                }
+                progressBar.style.width = `${percentage}%`;
+                progressPercent.innerText = `${percentage}%`;
+            }, 150);
+        }
+
+        /* --- DISPLAY COMPILING & LAYOUT TRANSITIONS --- */
+        function renderTools() {
+            const grid = document.getElementById('toolsGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            tools.forEach(t => {
+                grid.innerHTML += `
+                    <div class="card" onclick="animateViewPage(${t.id})">
+                        <div class="card-author">
+                            <div class="user-profile-icon" style="width:18px; height:18px; font-size:0.55rem;">${t.author.substring(0,2)}</div>
+                            <span>Indexed by // ${t.author}</span>
+                        </div>
+                        <h4>${t.name}</h4>
+                        <p>${t.pitch}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function filterTools() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('#toolsGrid .card');
+            tools.forEach((t, i) => {
+                const match = t.name.toLowerCase().includes(query) || t.pitch.toLowerCase().includes(query);
+                if (cards[i]) cards[i].style.display = match ? 'block' : 'none';
+            });
+        }
+
+        function checkAuthAndOpenUpload() {
+            if(!currentUser) { 
+                alert("Identity handshake verification state required."); 
+                openAuthModal('signin'); 
+            } else { 
+                openModal('uploadModal'); 
+            }
+        }
+
+        function addNewTool() {
+            const name = document.getElementById('toolName').value.trim();
+            const pitch = document.getElementById('toolPitch').value.trim();
+            const desc = document.getElementById('toolDesc').value.trim();
+            let mainImg = document.getElementById('toolImgMain').value.trim();
+
+            if(!name || !pitch || !desc) return alert("Payload profiles data lines incomplete.");
+            if(!mainImg) mainImg = "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1000&auto=format&fit=crop";
+
+            const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+            const item = {
+                id: Date.now(), slug, name, pitch, desc, mainImg,
+                sideImg1: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop",
+                sideImg2: "https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=600&auto=format&fit=crop",
+                author: currentUser.username
+            };
+
+            tools.unshift(item);
+            localStorage.setItem('hub_tools', JSON.stringify(tools));
+            renderTools();
+            closeModal('uploadModal');
+        }
+
+        function animateViewPage(id) {
+            const home = document.getElementById('homeView');
+            const detail = document.getElementById('detailView');
+            
+            home.style.opacity = "0";
+            home.style.transform = "scale(0.98)";
+            
+            setTimeout(() => {
+                home.style.display = "none";
+                compileProductPage(id);
+                detail.style.display = "block";
+                
+                setTimeout(() => { detail.classList.add('active'); }, 50);
+            }, 300);
+        }
+
+        function showHome() {
+            const home = document.getElementById('homeView');
+            const detail = document.getElementById('detailView');
+            
+            detail.classList.remove('active');
+            setTimeout(() => {
+                detail.style.display = "none";
+                home.style.display = "block";
+                setTimeout(() => { home.style.opacity = "1"; home.style.transform = "scale(1)"; }, 50);
+            }, 300);
+        }
+
+        function compileProductPage(id) {
+            const target = tools.find(t => t.id === id);
+            const detail = document.getElementById('detailView');
+            const toolComments = comments[id] || [];
+            const modelSlug = target.slug || "model-node";
+
+            let commentHTML = '';
+            toolComments.forEach(c => {
+                commentHTML += `
+                    <div class="comment-node">
+                        <div class="user-profile-icon" style="width:26px; height:26px; font-size:0.7rem;">${c.user.substring(0,2)}</div>
+                        <div>
+                            <div class="c-meta">${c.user} <span>Verified Node</span></div>
+                            <div class="c-text">${c.msg}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            detail.innerHTML = `
+                <div class="back-link" onclick="showHome()">&larr; Return to main decentralized directory</div>
+                <div class="detail-header">
+                    <div class="card-author" style="font-size:0.88rem; margin:0;">
+                        <div class="user-profile-icon" style="width:20px; height:20px; font-size:0.6rem;">${target.author.substring(0,2)}</div>
+                        <span>Deployment Origin // Published by ${target.author}</span>
+                    </div>
+                    <h1 style="margin-top:0.5rem;">${target.name}</h1>
+                    <p style="font-size:1.25rem; color:var(--text); line-height:1.4;">${target.pitch}</p>
+                </div>
+
+                <div class="image-gallery">
+                    <div class="main-img-box"><img class="gallery-img" src="${target.mainImg}"></div>
+                    <div class="side-images">
+                        <div class="side-img-box"><img class="gallery-img" src="${target.sideImg1}"></div>
+                        <div class="side-img-box"><img class="gallery-img" src="${target.sideImg2}"></div>
+                    </div>
+                </div>
+
+                <div class="detail-layout">
+                    <div class="doc-section">
+                        <h3>Configuration Manifest & Logic Depth</h3>
+                        <p>${target.desc.replace(/\n/g, "<br>")}</p>
+                        
+                        <div class="comment-box">
+                            <h3>Reviews & Node Telemetry</h3>
+                            <div class="comment-thread">${commentHTML}</div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-panel">
+                        <div class="sidebar-title">Local Execution Instance</div>
+                        <div class="terminal-block">gostack run ${modelSlug}</div>
+                        
+                        <button id="dl-main-btn" class="submit-btn" style="margin-top: 0;" onclick="triggerModelDownload('${modelSlug}')">
+                            Download AI Model Weights
+                        </button>
+
+                        <div class="progress-container" id="dl-progress-box">
+                            <div class="progress-meta">
+                                <span>downloading manifesto layers...</span>
+                                <span id="dl-percent">0%</span>
+                            </div>
+                            <div class="progress-track">
+                                <div class="progress-bar" id="dl-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
             --border: #1a1a1a;
             --border-hover: #333333;
             --text-muted: #666666;
