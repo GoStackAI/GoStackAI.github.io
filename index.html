@@ -255,7 +255,7 @@
             ]
         };
 
-        // Render interfaces instantly upon page runtime initialization
+        // FIXED: Render functions call directly and cleanly immediately when DOM is safe
         window.addEventListener('DOMContentLoaded', () => {
             renderTools();
             checkActiveSession();
@@ -349,8 +349,8 @@
             if(currentUser) {
                 let initial = currentUser.email.substring(0,2);
                 container.innerHTML = `
-                    <div class="user-profile-icon">${initial}</div>
-                    <span style="font-size:0.9rem; color:var(--text-bright); font-weight:500;">${currentUser.email.split('@')[0]}</span>
+                    <div class="user-profile-icon" style="width:32px; height:32px; font-size:0.8rem; border-radius:50%; background:#141414; border:1px solid var(--border); display:inline-flex; align-items:center; justify-content:center; color:white; font-weight:600; text-transform:uppercase; margin-right:8px;">${initial}</div>
+                    <span style="font-size:0.9rem; color:var(--text-bright); font-weight:500; margin-right:12px;">${currentUser.email.split('@')[0]}</span>
                     <button class="nav-btn" style="padding:0.4rem 0.85rem; font-size:0.8rem;" onclick="logout()">Disconnect</button>
                 `;
             } else {
